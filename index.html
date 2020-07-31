@@ -67,44 +67,45 @@
   </div>
   
   <script>
-    //準備uuid, apiPath, token
-    const uuid = 'd4b6d215-5c7c-431c-adf1-f5c31b29ff6b';
-    const apiPath = 'https://course-ec-api.hexschool.io/api/';
-    const token = 'H4q3swVwfjHpr2273Tw0zS0awXGUMuJxgCFyPDknm5bb2JCbAR1w18Ass5yr';
+    var obj = {
+      //準備uuid, apiPath, token
+      uuid : 'd4b6d215-5c7c-431c-adf1-f5c31b29ff6b',
+      apiPath : 'https://course-ec-api.hexschool.io/api/',
+      token : 'H4q3swVwfjHpr2273Tw0zS0awXGUMuJxgCFyPDknm5bb2JCbAR1w18Ass5yr',
+      getData() {
+        let api = `${this.apiPath}${this.uuid}/admin/ec/products`;
+        axios.get(api).then((res)=> {
+          data = res.data.data;
+          console.log(data);
+          obj.render();
+        });
+      },
+      render() {
+        data.forEach((item, i) => {
+          str += `<div class="card">
+            <img src=${item.imageUrl} class="card-img-top" alt="light">
+            <div class="card-body">
+              <h5 class="card-title">${item.content}</h5>
+              <p>
+                <span class="price">特價${item.price}</span>
+                <span class="ori-price">原價${item['origin_price']}</span><br>
+              </p>
+              <a href="#" class="btn btn-dark">More</a>
+            </div>
+          </div> `
+        });
+        document.querySelector('#app').innerHTML = str;
+      },
+    };
 
     //驗證
-    axios.defaults.headers['Authorization'] = `Bearer ${token}`;
+    axios.defaults.headers['Authorization'] = `Bearer ${obj.token}`;
 
     //準備商品data
     let data = [];
     let str = '';
-    function getData() {
-      let api = `${apiPath}${uuid}/admin/ec/products`;
-      axios.get(api).then((res)=> {
-        data = res.data.data;
-        console.log(data);
-        render();
-      });
-    }
-    
-    function render() {
-      data.forEach((item, i) => {
-        str += `<div class="card">
-          <img src=${item.imageUrl} class="card-img-top" alt="light">
-          <div class="card-body">
-            <h5 class="card-title">${item.content}</h5>
-            <p>
-              <span class="price">特價${item.price}</span>
-              <span class="ori-price">原價${item['origin_price']}</span><br>
-            </p>
-            <a href="#" class="btn btn-dark">More</a>
-          </div>
-        </div> `
-      });
-      document.querySelector('#app').innerHTML = str;
-    }
 
-    getData();
+    obj.getData();
   </script>
 </body>
 </html>
