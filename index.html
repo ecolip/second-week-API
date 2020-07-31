@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <style>
+    #logo{
+      width: 50px;
+      height: 70px;
+    }
+    .copyright{
+      background: #ddd;
+    }
+    .nav-link{
+      font-size: 18px;
+      font-weight: 600;
+      color: #222;
+    }
+    .nav-link:hover{
+      color: #666;
+    }
+    .nav-link.active{
+      color: #666;
+    }
+    .ori-price{
+      font-size: 12px;
+      color: #666;
+      text-decoration: line-through;
+    }
+    .price{
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div id="header">
+    <div class="container">
+      <h2 class="my-4 text-center">吊燈產品列表</h2>
+      <img id="logo" class="d-block mx-auto" src="image/logo.jpg" alt="logo">
+      <ul class="nav justify-content-center mb-3">
+        <li class="nav-item mr-4">
+          <a class="nav-link" href="#">首頁</a>
+        </li>
+        <li class="nav-item mr-4">
+          <a class="nav-link active" href="#">產品</a>
+        </li>
+        <li class="nav-item mr-4">
+          <a class="nav-link" href="#">品牌故事</a>
+        </li>
+        <li class="nav-item mr-4">
+          <a class="nav-link" href="#">聯絡我們</a>
+        </li>
+      </ul>
+      <div id="app" class="card-columns">
+      </div>
+    </div>
+  </div>
+  
+  <div id="footer">
+    <div class="container">
+      <div class="copyright text-center mt-5 py-2">資料、圖片、文章來源皆來自網路，僅用來做為學習用途。</div>
+    </div>
+  </div>
+  
+  <script>
+    //準備uuid, apiPath, token
+    const uuid = 'd4b6d215-5c7c-431c-adf1-f5c31b29ff6b';
+    const apiPath = 'https://course-ec-api.hexschool.io/api/';
+    const token = 'H4q3swVwfjHpr2273Tw0zS0awXGUMuJxgCFyPDknm5bb2JCbAR1w18Ass5yr';
+
+    //驗證
+    axios.defaults.headers['Authorization'] = `Bearer ${token}`;
+
+    //準備商品data
+    let data = [];
+    let str = '';
+    function getData() {
+      let api = `${apiPath}${uuid}/admin/ec/products`;
+      axios.get(api).then((res)=> {
+        data = res.data.data;
+        console.log(data);
+        render();
+      });
+    }
+    
+    function render() {
+      data.forEach((item, i) => {
+        str += `<div class="card">
+          <img src=${item.imageUrl} class="card-img-top" alt="light">
+          <div class="card-body">
+            <h5 class="card-title">${item.content}</h5>
+            <p>
+              <span class="price">特價${item.price}</span>
+              <span class="ori-price">原價${item['origin_price']}</span><br>
+            </p>
+            <a href="#" class="btn btn-dark">More</a>
+          </div>
+        </div> `
+      });
+      document.querySelector('#app').innerHTML = str;
+    }
+
+    getData();
+  </script>
+</body>
+</html>
